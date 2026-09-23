@@ -1,0 +1,33 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,redis,projection
+      show-details: when_authorized
+logging:
+  structured:
+    format:
+      console: logstash
+server:
+  shutdown: graceful
+  tomcat:
+    threads:
+      max: 200
+spring:
+  application:
+    name: ranking-query-service
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2s
+      connect-timeout: 2s
+ranking:
+  partitions: ${RANKING_PARTITIONS:32}

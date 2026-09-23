@@ -1,0 +1,35 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when_authorized
+logging:
+  structured:
+    format:
+      console: logstash
+server:
+  shutdown: graceful
+  tomcat:
+    threads:
+      max: 200
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: scores
+              uri: ${SCORE_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/v1/scores,/api/v1/scores/**
+            - id: rankings
+              uri: ${RANKING_QUERY_SERVICE_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/v1/rankings/**
